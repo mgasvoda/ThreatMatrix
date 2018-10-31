@@ -10,6 +10,8 @@ from flask import Flask, redirect, url_for, render_template, send_file, Markup
 app = Flask(__name__)
 
 df = processing.get_data(250)
+processing.create_map(df, 'choropleth')
+processing.create_map(df, 'points')
 
 @app.route("/")
 def hello():
@@ -43,13 +45,12 @@ def show_plots():
 
 @app.route('/maps/points.html')
 def show_map_points():
-  processing.create_map(df, 'points')
   return send_file('./maps/points.html')
 
 
 @app.route('/maps/choropleth.html')
 def show_map_choro():
-  processing.create_map(df, 'choropleth')
+
   return send_file('./maps/choropleth.html')
 
 
