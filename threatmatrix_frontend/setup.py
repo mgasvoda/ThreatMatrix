@@ -4,19 +4,20 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="threatmatrix_backend",
+    name="threatmatrix_frontend",
     version="0.0.1",
     author="Michael Gasvoda",
-    description="Conflict data aggregation and analysis framework",
+    description="Conflict data visualization and analysis",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/mgasvoda/ThreatMatrix",
     packages=setuptools.find_packages(),
     install_requires=[
-        'requests>=2.18.4', 
         'sqlalchemy>=1.2.7',
         'pandas>=0.23.0',
-        'numpy>=1.14.3'
+        'folium>=0.6.0',
+        'bokeh>=1.0.0',
+        'flask>=1.0.2',
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
