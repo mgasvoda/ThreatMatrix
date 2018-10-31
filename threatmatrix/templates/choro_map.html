@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Maps{% endblock %}
+{% endblock %}
+
+{% block content %}
+    <div class=container> 
+      <iframe src="{{ url_for('show_map_choro') }}" width="80%" height="90%" frameborder="1" style="position: absolute;"></iframe>
+    </div>
+{% endblock %}

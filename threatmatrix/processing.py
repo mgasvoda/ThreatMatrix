@@ -51,7 +51,7 @@ def create_points(df):
         folium.Marker([float(points[i][0]), float(points[i][1])], 
             tooltip=points[i][2]).add_to(m)
 
-    m.save(Path(__file__).parent + '/maps/points.html')
+    m.save(str(Path(__file__).parent.joinpath('maps/points.html')))
 
 
 def get_color(feature, map_dict, columns, color_scale):
@@ -67,7 +67,8 @@ def create_choropleth(df, columns):
     df = df.groupby(columns[0]).sum()[columns[1]].to_frame().reset_index()
     map_dict = df.set_index(columns[0])[columns[1]].to_dict()
 
-    country_geo = Path(__file__).parent + '/assets/countries.geojson'
+    country_geo = str(Path(__file__).parent\
+                      .joinpath('assets/countries.geojson'))
     color_scale = LinearColormap(['yellow','red'], vmin=min(map_dict.values()),
                                  vmax=max(map_dict.values()))
 
@@ -83,7 +84,7 @@ def create_choropleth(df, columns):
         }    
     ).add_to(m)
 
-    m.save(Path(__file__).parent + '/maps/choropleth.html')
+    m.save(str(Path(__file__).parent.joinpath('maps/choropleth.html')))
 
 
 def create_bar_chart(df):

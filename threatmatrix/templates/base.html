@@ -7,7 +7,7 @@
     <meta name="author" content="@mgasvoda">
     <!-- <link rel="icon" href="favicon.ico"> -->
 
-    <title>Map View</title>
+    <title>{% block title %}{% endblock %} - ThreatMatrix</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -20,6 +20,10 @@
     </style>
   </head>
 
+  <header> 
+    {% block header %}{% endblock %}
+  </header>
+
   <body>
     <!-- navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -29,20 +33,23 @@
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#nav-1">
           <span class="sr-only">Toggle navigation</span>
           </button>
-          <span class="navbar-brand">Threat Matrix</span>
+          <a class="navbar-brand" href="/">Threat Matrix</a>
         </div>
 
         <div class="collapse navbar-collapse" id="nav-1">
           <ul class="nav navbar-nav">
             <li class="nav-item">
-              <a class="nav-link" href="/">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/maps.html">Map</a>
-            </li>
+              <li class="dropdown">
+                  <a class="dropdown-toggle" data-toggle="dropdown" href="#">Maps
+                  <span class="caret"></span></a> 
+                  <ul class="dropdown-menu">
+                    <li><a href="/points_map.html">Points</a></li>
+                    <li><a href="/choro_map.html">Choro</a></li>
+                  </ul>
+              </li>
             <li class="nav-item">
               <a class="nav-link" href="/plots.html">Plots</a>
-            </li> 
+            </li>
             <li class="nav-item">
               <a class="nav-link" href="https://github.com/mgasvoda/threatmatrix_frontend" target="_blank">GitHub</a>
             </li>
@@ -54,9 +61,11 @@
       </div>
     </nav>
 
-    <!-- map -->
     <div class="container">
-      <iframe src="{{ url_for('show_map_choro') }}" width="80%" height="90%" frameborder="1" style="position: absolute;"></iframe>
+        {% for message in get_flashed_messages() %}
+          <div class="flash">{{ message }}</div>
+        {% endfor %}
+        {% block content %}{% endblock %}
     </div>
 
     <!-- Bootstrap core JS -->

@@ -13,7 +13,6 @@ df = processing.get_data(250)
 
 @app.route("/")
 def hello():
-    # with open(os.path.join(__file__ "README.md", 'r') as f:
     path = os.path.abspath('README.md')
     with open(path, 'r') as f:
         content = f.read()
@@ -21,9 +20,14 @@ def hello():
     return render_template('index.html', **locals())
 
 
-@app.route("/maps.html")
-def display():
-    return render_template('maps.html')
+@app.route("/points_map.html")
+def display_points():
+    return render_template('points_map.html')
+
+
+@app.route("/choro_map.html")
+def display_choro():
+    return render_template('choro_map.html')
 
 
 @app.route("/plots.html")
