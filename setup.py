@@ -18,6 +18,7 @@ setuptools.setup(
         'folium>=0.6.0',
         'bokeh>=1.0.0',
         'flask>=1.0.2',
+        'markdown>=3.0.1'
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
