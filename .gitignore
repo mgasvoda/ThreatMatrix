@@ -1,5 +1,8 @@
-.vscode
-threatmatrix_frontend/app/maps/
 **.pyc
+.vscode
 **db.py
 **/__pycache__
+**.ipynb
+**/.ipynb_checkpoints
+
+threatmatrix_frontend/app/maps/
