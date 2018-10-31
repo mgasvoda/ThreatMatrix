@@ -10,6 +10,7 @@ from bokeh.models.widgets import RangeSlider, Button, DataTable, TableColumn, Nu
 from bokeh.models import ColumnDataSource, Whisker
 from bokeh.plotting import figure, show
 from bokeh.layouts import row, widgetbox
+from branca.colormap import LinearColormap
 from db import db_location
 
 
@@ -35,7 +36,7 @@ def clean_note(note):
 
 def create_map(df, map_type):
     if map_type == 'choropleth':
-        create_choropleth(df, columns['fatalities', 'country'])
+        create_choropleth(df, columns=['country', 'fatalities'])
     elif map_type == 'points':
         create_points(df)
 
@@ -48,25 +49,36 @@ def create_points(df):
     for i in range(len(points)):
         folium.Marker([float(points[i][0]), float(points[i][1])], tooltip=points[i][2]).add_to(m)
 
-    m.save('maps/points.html')
+    m.save(os.path.dirname(__file__) + '/maps/points.html')
+
+
+def get_color(feature, map_dict, columns, color_scale):
+    value = map_dict.get(feature['properties']["ADMIN"])
+    if value is None:
+        return '#8c8c8c' # MISSING -> gray
+    else:
+        return color_scale(value)
 
 
 def create_choropleth(df, columns):
-    country_geo = 'assets/countries.geojson'
-    m = folium.Map(location=[0, 0], zoom_start=1)
-    m.choropleth(
-        geo_data=country_geo,
-        data=df,
-        columns=columns,
-        key_on='properties.ADMIN',
-        fill_color="YlGn",
-        fill_opacity=0.7,
-        legend_name='GDP per Capita'
-    )
+    df[columns[1]] = pd.to_numeric(df[columns[1]], downcast='integer').fillna(0)
+    df = df.groupby(columns[0]).sum()[columns[1]].to_frame().reset_index()
+    map_dict = df.set_index(columns[0])[columns[1]].to_dict()
+    country_geo = os.path.dirname(__file__) + '/assets/countries.geojson'
+    color_scale = LinearColormap(['yellow','red'], vmin = min(map_dict.values()), vmax = max(map_dict.values()))
+    m = folium.Map(location=[0, 0], zoom_start=3)
 
-    folium.LayerControl().add_to(m)
+    folium.GeoJson(
+        data = country_geo,
+        style_function = lambda feature: {
+            'fillColor': get_color(feature, map_dict, columns, color_scale),
+            'fillOpacity': 0.7,
+            'color' : 'black',
+            'weight' : 1,
+        }    
+    ).add_to(m)
 
-    m.save('maps/choropleth.html')
+    m.save(os.path.dirname(__file__) + '/maps/choropleth.html')
 
 
 def create_bar_chart(df):

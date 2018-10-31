@@ -1,5 +1,5 @@
 .vscode
-threatmatrix_frontend/maps/
+threatmatrix_frontend/app/maps/
 **.pyc
 **db.py
 **/__pycache__
