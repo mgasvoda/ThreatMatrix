@@ -1,3 +1,7 @@
 .column {
     display: flex;
   }
+
+.map {
+  height: 750px;
+}

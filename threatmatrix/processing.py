@@ -38,18 +38,33 @@ def clean_note(note):
 def create_map(df, map_type):
     if map_type == 'choropleth':
         create_choropleth(df, columns=['country', 'fatalities'])
-    elif map_type == 'points':
+    elif map_type == 'points': 
         create_points(df)
 
 
 def create_points(df):
-    m = folium.Map(location=[35, 55], zoom_start=5)
+    m = folium.Map(location=[35, 55], zoom_start=5, tiles='Stamen Terrain')
+    icons = {
+        'Default': 'info-sign',
+        'Riots/Protests': 'user',
+        'Battle-No change of territory': 'flash',
+        'Violence against civilians': 'pawn',
+        'Strategic development': 'globe',
+        'Remote violence': 'plane',
+        'Battle-Government regains territory': 'king',
+        'Battle-Non-state actor overtakes territory': 'queen',
+        'Non-violent transfer of territory': 'transfer',
+        'Headquarters or base established': 'tower'
+    }
 
-    points = df[['latitude', 'longitude', 'notes']].values.tolist() 
+    points = df[['latitude', 'longitude', 'notes', 
+                 'event_type']].values.tolist() 
 
     for i in range(len(points)):
-        folium.Marker([float(points[i][0]), float(points[i][1])], 
-            tooltip=points[i][2]).add_to(m)
+        folium.Marker([float(points[i][0]), 
+            float(points[i][1])], 
+            tooltip=points[i][2],
+            icon=folium.Icon(icon=icons[points[i][3]])).add_to(m)
 
     m.save(str(Path(__file__).parent.joinpath('maps/points.html')))
 
@@ -72,7 +87,7 @@ def create_choropleth(df, columns):
     color_scale = LinearColormap(['yellow','red'], vmin=min(map_dict.values()),
                                  vmax=max(map_dict.values()))
 
-    m = folium.Map(location=[0, 0], zoom_start=3, width='80%')
+    m = folium.Map(location=[0, 0], zoom_start=3)
 
     folium.GeoJson(
         data = country_geo,
